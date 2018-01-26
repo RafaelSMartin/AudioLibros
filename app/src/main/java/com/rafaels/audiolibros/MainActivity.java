@@ -12,8 +12,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
@@ -43,6 +44,14 @@ public class MainActivity extends AppCompatActivity {
 //        layoutManager = new GridLayoutManager(this, 2,
 //                LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
+
+        app.getAdaptador().setOnItemClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Toast.makeText(MainActivity.this, "Seleccionado elemento: "
+                + recyclerView.getChildAdapterPosition(v), Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
     }
