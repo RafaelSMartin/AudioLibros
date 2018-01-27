@@ -1,6 +1,7 @@
 package com.rafaels.audiolibros;
 
 import android.app.Application;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,8 +13,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import com.rafaels.audiolibros.fragments.DetalleFragment;
+import com.rafaels.audiolibros.fragments.SelectorFragment;
+
+public class MainActivity extends AppCompatActivity{
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
@@ -34,15 +39,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        if((findViewById(R.id.contenedor_pequeno) != null) &&
+                (getFragmentManager().findFragmentById(R.id.contenedor_pequeno) == null)){
+            SelectorFragment primerFragment = new SelectorFragment();
+            getFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.contenedor_pequeno, primerFragment)
+                    .commit();
+        }
 
-        Aplicacion app = (Aplicacion) getApplication();
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerView.setAdapter(app.getAdaptador());
-        layoutManager = new LinearLayoutManager(this);
-//        layoutManager = new GridLayoutManager(this, 2);
-//        layoutManager = new GridLayoutManager(this, 2,
-//                LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(layoutManager);
+//        Aplicacion app = (Aplicacion) getApplication();
+//        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+//        recyclerView.setAdapter(app.getAdaptador());
+//        layoutManager = new LinearLayoutManager(this);
+////        layoutManager = new GridLayoutManager(this, 2);
+////        layoutManager = new GridLayoutManager(this, 2,
+////                LinearLayoutManager.HORIZONTAL, false);
+//        recyclerView.setLayoutManager(layoutManager);
+//
+//        app.getAdaptador().setOnItemClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View v){
+//                Toast.makeText(MainActivity.this, "Seleccionado elemento: "
+//                + recyclerView.getChildAdapterPosition(v), Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
 
     }
@@ -68,4 +89,25 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void mostrarDetalle(int id){
+        DetalleFragment detalleFragment = (DetalleFragment) getFragmentManager().findFragmentById(R.id.detalle_fragment);
+        if(detalleFragment != null){
+            detalleFragment.ponInfoLibro(id);
+        }else{
+            DetalleFragment nuevoFragment = new DetalleFragment();
+            Bundle args = new Bundle();
+            args.putInt(DetalleFragment.ARG_ID_LIBRO, id);
+            nuevoFragment.setArguments(args);
+            FragmentTransaction transaccion = getFragmentManager()
+                    .beginTransaction();
+            transaccion.replace(R.id.contenedor_pequeno, nuevoFragment);
+            transaccion.addToBackStack(null);
+            transaccion.commit();
+
+        }
+    }
+
+
+
 }

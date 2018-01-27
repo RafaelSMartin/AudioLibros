@@ -21,6 +21,18 @@ public class AdaptadorLibros extends RecyclerView.Adapter<AdaptadorLibros.ViewHo
     protected List<Libro> listaLibros;  //Lista de libros a visualizar
     private Context context;
 
+    private View.OnClickListener onClickListener; //Escuchador independiente para elemento
+    private View.OnLongClickListener onLongClickListener; //Escuchador para click largo
+
+    // set del Listener
+    public void setOnItemClickListener(View.OnClickListener onClickListener){
+        this.onClickListener = onClickListener;
+    }
+
+    public void setOnItemLongClickListener(View.OnLongClickListener onLongClickListener){
+        this.onLongClickListener = onLongClickListener;
+    }
+
     public AdaptadorLibros(Context contexto, List<Libro> listaLibros){
         inflador = (LayoutInflater) contexto.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.listaLibros = listaLibros;
@@ -44,6 +56,10 @@ public class AdaptadorLibros extends RecyclerView.Adapter<AdaptadorLibros.ViewHo
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         // Inflamos la vista desde el xml
         View v = inflador.inflate(R.layout.elemento_selector, null);
+
+        //Instanciar el listener
+        v.setOnClickListener(onClickListener);
+        v.setOnLongClickListener(onLongClickListener);
         return new ViewHolder(v);
     }
 
@@ -58,5 +74,7 @@ public class AdaptadorLibros extends RecyclerView.Adapter<AdaptadorLibros.ViewHo
     // Indicamos el número de elementos de la lista
      @Override
      public int getItemCount() { return listaLibros.size(); }
+
+
 
 }
