@@ -95,7 +95,6 @@ public class SelectorFragment extends Fragment {
                return true;
            }
         });
-
         return vista;
     }
 }
