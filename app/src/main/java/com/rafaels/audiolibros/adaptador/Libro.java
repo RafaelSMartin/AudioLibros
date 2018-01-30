@@ -1,4 +1,6 @@
-package com.rafaels.audiolibros;
+package com.rafaels.audiolibros.adaptador;
+
+import com.rafaels.audiolibros.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +61,8 @@ public class Libro {
                 SERVIDOR+"matrim_sabuesos.mp3", Libro.G_SUSPENSE, false, true));
 
         libros.add(new Libro("La iliada", "Homero", R.drawable.iliada,
-                SERVIDOR+"la_iliada.mp3", Libro.G_EPICO, true, false)); return libros;
+                SERVIDOR+"la_iliada.mp3", Libro.G_EPICO, true, false));
+        return libros;
     }
 
 

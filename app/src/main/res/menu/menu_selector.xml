@@ -1,0 +1,35 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.rafaels.audiolibros.MainActivity">
+
+    <item
+        android:id="@+id/menu_buscar"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        android:orderInCategory="90"
+        android:icon="@android:drawable/ic_menu_search"
+        app:showAsAction="ifRoom|collapseActionView"
+        android:title="Buscar"/>
+
+    <!--<item-->
+        <!--android:id="@+id/menu_preferencias"-->
+        <!--android:icon="@android:drawable/ic_menu_preferences"-->
+        <!--android:orderInCategory="95"-->
+        <!--android:title="Preferencias"-->
+        <!--app:showAsAction="ifRoom" />-->
+
+    <item
+        android:id="@+id/menu_ultimo"
+        android:icon="@android:drawable/ic_menu_set_as"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom|withText"
+        android:title="Ultimo leido"/>
+
+    <!--<item-->
+        <!--android:id="@+id/menu_acerca"-->
+        <!--android:orderInCategory="110"-->
+        <!--app:showAsAction="never"-->
+        <!--android:title="Acerca de..."/>-->
+
+
+</menu>

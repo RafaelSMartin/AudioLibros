@@ -2,6 +2,9 @@ package com.rafaels.audiolibros;
 
 import android.app.Application;
 
+import com.rafaels.audiolibros.adaptador.AdaptadorLibros;
+import com.rafaels.audiolibros.adaptador.Libro;
+
 import java.util.List;
 
 /**

@@ -6,16 +6,19 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.rafaels.audiolibros.AdaptadorLibros;
+import com.rafaels.audiolibros.adaptador.AdaptadorLibros;
 import com.rafaels.audiolibros.Aplicacion;
-import com.rafaels.audiolibros.Libro;
+import com.rafaels.audiolibros.adaptador.Libro;
 import com.rafaels.audiolibros.MainActivity;
 import com.rafaels.audiolibros.R;
 
@@ -47,6 +50,8 @@ public class SelectorFragment extends Fragment {
     public View onCreateView(LayoutInflater inflador, ViewGroup contenedor,
                              Bundle savedInstanceState){
         View vista = inflador.inflate(R.layout.fragment_selector, contenedor, false);
+
+        setHasOptionsMenu(true);
 
         recyclerView = (RecyclerView) vista.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
@@ -81,12 +86,20 @@ public class SelectorFragment extends Fragment {
                                startActivity(Intent.createChooser(i, "Compartir"));
                                break;
                            case 1: //Borrar
-                               listaLibros.remove(id);
-                               adaptador.notifyDataSetChanged();
+                               Snackbar.make(v, "¿Estas seguro?", Snackbar.LENGTH_LONG)
+                                       .setAction("SI", new View.OnClickListener() {
+                                           @Override
+                                           public void onClick(View v) {
+                                               listaLibros.remove(id);
+                                               adaptador.notifyDataSetChanged();
+                                           }
+                                       }).show();
                                break;
                            case 2: //Insertar
                                listaLibros.add(listaLibros.get(id));
                                adaptador.notifyDataSetChanged();
+                               Snackbar.make(v, "Libro insertado", Snackbar.LENGTH_INDEFINITE)
+                                       .show();
                                break;
                        }
                    }
@@ -97,4 +110,25 @@ public class SelectorFragment extends Fragment {
         });
         return vista;
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        inflater.inflate(R.menu.menu_selector, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+        if(id == R.id.menu_ultimo){
+            ((MainActivity)actividad).irUltimoVisitado();
+            return true;
+        } else if(id == R.id.menu_buscar){
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
 }

@@ -1,13 +1,14 @@
-package com.rafaels.audiolibros;
+package com.rafaels.audiolibros.adaptador;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.rafaels.audiolibros.R;
 
 import java.util.List;
 
