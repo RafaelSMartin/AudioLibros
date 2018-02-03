@@ -13,7 +13,9 @@ import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.NetworkImageView;
 import com.rafaels.audiolibros.Aplicacion;
+import com.rafaels.audiolibros.MainActivity;
 import com.rafaels.audiolibros.adaptador.Libro;
 import com.rafaels.audiolibros.R;
 
@@ -49,6 +51,15 @@ public class DetalleFragment extends Fragment implements
         return vista;
     }
 
+    @Override
+    public void onResume(){
+        DetalleFragment detalleFragment = (DetalleFragment)getFragmentManager().findFragmentById(R.id.detalle_fragment);
+        if (detalleFragment == null){
+            ((MainActivity)getActivity()).mostrarElementos(false);
+        }
+        super.onResume();
+    }
+
     // Introducimos la info en la vista
     private void ponInfoLibro(int id, View vista){
         // Referencia del libro a representar
@@ -57,7 +68,9 @@ public class DetalleFragment extends Fragment implements
         // Actualizamos la info
         ((TextView) vista.findViewById(R.id.titulo)).setText(libro.titulo);
         ((TextView) vista.findViewById(R.id.autor)).setText(libro.autor);
-        ((ImageView) vista.findViewById(R.id.portada)).setImageResource(libro.recursoImagen);
+        Aplicacion aplicacion = (Aplicacion)getActivity().getApplication();
+        ((NetworkImageView) vista.findViewById(R.id.portada)).setImageUrl(
+                libro.urlImagen,aplicacion.getLectorImagenes());
 
         //Ponemos a escuchar la vista
         vista.setOnTouchListener(this);
