@@ -1,9 +1,11 @@
 package com.rafaels.audiolibros.fragments;
 
 import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -100,7 +102,13 @@ public class DetalleFragment extends Fragment implements
     @Override
     public void onPrepared(MediaPlayer mediaPlayer){
         Log.d("AudioLibros", "Entramos en onPrepared de MediaPlayer");
-        mediaPlayer.start();
+//        mediaPlayer.start();
+        SharedPreferences preferencias = PreferenceManager
+                .getDefaultSharedPreferences(getActivity());
+        if(preferencias.getBoolean("pref_autoreproducir", true)){
+            mediaPlayer.start();
+        }
+
         mediaController.setMediaPlayer(this);
         mediaController.setAnchorView(getView().findViewById(R.id.fragment_detalle));
 //        mediaController.setPadding(0,0,0,110);

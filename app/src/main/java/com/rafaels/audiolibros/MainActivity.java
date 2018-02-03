@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.rafaels.audiolibros.adaptador.AdaptadorLibrosFiltro;
 import com.rafaels.audiolibros.adaptador.Libro;
 import com.rafaels.audiolibros.fragments.DetalleFragment;
+import com.rafaels.audiolibros.fragments.PreferenciasFragment;
 import com.rafaels.audiolibros.fragments.SelectorFragment;
 
 public class MainActivity extends AppCompatActivity implements
@@ -65,14 +66,22 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        if((findViewById(R.id.contenedor_pequeno) != null) &&
-                (getFragmentManager().findFragmentById(R.id.contenedor_pequeno) == null)){
-            SelectorFragment primerFragment = new SelectorFragment();
-            getFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.contenedor_pequeno, primerFragment)
-                    .commit();
-        }
+//        if((findViewById(R.id.contenedor_pequeno) != null) &&
+//                (getFragmentManager().findFragmentById(R.id.contenedor_pequeno) == null)){
+//            SelectorFragment primerFragment = new SelectorFragment();
+//            getFragmentManager()
+//                    .beginTransaction()
+//                    .add(R.id.contenedor_pequeno, primerFragment)
+//                    .commit();
+//        }
+
+        int idContenedor = (findViewById(R.id.contenedor_pequeno) != null) ?
+                R.id.contenedor_pequeno : R.id.contenedor_izquierdo;
+        SelectorFragment primerFragment = new SelectorFragment();
+        getFragmentManager()
+                .beginTransaction()
+                .add(idContenedor, primerFragment)
+                .commit();
 
 //        Aplicacion app = (Aplicacion) getApplication();
 //        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -168,6 +177,10 @@ public class MainActivity extends AppCompatActivity implements
         } else if(id == R.id.nav_suspense){
             adaptador.setGenero(Libro.G_SUSPENSE);
             adaptador.notifyDataSetChanged();
+        } else if (id == R.id.nav_preferencias){
+            abrePreferencias();
+        } else if(id == R.id.nav_compartir){
+            Toast.makeText(this, "share elemento:", Toast.LENGTH_SHORT).show();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById( R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -186,8 +199,9 @@ public class MainActivity extends AppCompatActivity implements
 
         if (id == R.id.menu_preferencias) {
 //            Toast.makeText(this, "Preferencias", Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(this, PreferenciasActivity.class);
-            startActivity(i);
+//            Intent i = new Intent(this, PreferenciasActivity.class);
+//            startActivity(i);
+            abrePreferencias();
             return true;
         } else if (id == R.id.menu_acerca){
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -243,8 +257,18 @@ public class MainActivity extends AppCompatActivity implements
         if(id >= 0){
             mostrarDetalle(id);
         } else{
-            Toast.makeText(this, "Sin ultima vista", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Sin ultima visita", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void abrePreferencias() {
+        int idContenedor = (findViewById(R.id.contenedor_pequeno) != null) ?
+                R.id.contenedor_pequeno : R.id.contenedor_izquierdo;
+        PreferenciasFragment prefFragment = new PreferenciasFragment();
+        getFragmentManager().beginTransaction()
+                .replace(idContenedor, prefFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
 

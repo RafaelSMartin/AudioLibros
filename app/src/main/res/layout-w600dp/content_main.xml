@@ -10,9 +10,16 @@
     tools:context="com.rafaels.audiolibros.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <fragment
-        android:id="@+id/selector_fragment"
-        android:name="com.rafaels.audiolibros.fragments.SelectorFragment"
+    <!--<fragment-->
+        <!--android:id="@+id/selector_fragment"-->
+        <!--android:name="com.rafaels.audiolibros.fragments.SelectorFragment"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1" />-->
+
+    <LinearLayout
+        android:id="@+id/contenedor_izquierdo"
+        android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1" />
