@@ -68,9 +68,10 @@ public class DetalleFragment extends Fragment implements
         // Actualizamos la info
         ((TextView) vista.findViewById(R.id.titulo)).setText(libro.titulo);
         ((TextView) vista.findViewById(R.id.autor)).setText(libro.autor);
-        Aplicacion aplicacion = (Aplicacion)getActivity().getApplication();
-        ((NetworkImageView) vista.findViewById(R.id.portada)).setImageUrl(
-                libro.urlImagen,aplicacion.getLectorImagenes());
+        ((ImageView) vista.findViewById(R.id.portada)).setImageResource(libro.recursoImagen);
+//        Aplicacion aplicacion = (Aplicacion)getActivity().getApplication();
+//        ((NetworkImageView) vista.findViewById(R.id.portada)).setImageUrl(
+//                libro.urlImagen,aplicacion.getLectorImagenes());
 
         //Ponemos a escuchar la vista
         vista.setOnTouchListener(this);
