@@ -3,6 +3,7 @@ package com.rafaels.audiolibros;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -184,7 +185,9 @@ public class MainActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         if (id == R.id.menu_preferencias) {
-            Toast.makeText(this, "Preferencias", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Preferencias", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(this, PreferenciasActivity.class);
+            startActivity(i);
             return true;
         } else if (id == R.id.menu_acerca){
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
