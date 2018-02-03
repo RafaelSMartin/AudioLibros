@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.rafaels.audiolibros.adaptador.AdaptadorLibrosFiltro;
 import com.rafaels.audiolibros.fragments.DetalleFragment;
 import com.rafaels.audiolibros.fragments.SelectorFragment;
 
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity{
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
+    private AdaptadorLibrosFiltro adaptador;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,8 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        adaptador = ((Aplicacion) getApplicationContext()).getAdaptador();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -81,19 +85,19 @@ public class MainActivity extends AppCompatActivity{
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()){
                     case 0: //Todos
-//                        adaptador.setNovedad(false);
-//                        adaptador.setLeido(false);
+                        adaptador.setNovedad(false);
+                        adaptador.setLeido(false);
                         break;
                     case 1: // Nuevos
-//                        adaptador.setNovedad(true);
-//                        adaptador.setLeido(false);
+                        adaptador.setNovedad(true);
+                        adaptador.setLeido(false);
                         break;
                     case 2: // Leidos
-//                        adaptador.setNovedad(false);
-//                        adaptador.setLeido(true);
+                        adaptador.setNovedad(false);
+                        adaptador.setLeido(true);
                         break;
                 }
-//                adaptador.notifyDataSetChanged();
+                adaptador.notifyDataSetChanged();
 
             }
 

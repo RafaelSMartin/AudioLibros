@@ -19,7 +19,9 @@ import java.util.List;
 public class AdaptadorLibros extends RecyclerView.Adapter<AdaptadorLibros.ViewHolder> {
 
     private LayoutInflater inflador;    //Crea Layouts a partir del XML
-    protected List<Libro> listaLibros;  //Lista de libros a visualizar
+    protected List<Libro> listaLibros;  //Lista de libros a visualizar,
+                                        // nos permite acceder a ella desde
+                                        // un descendiente (AdaptadorLibrosFiltro)
     private Context context;
 
     private View.OnClickListener onClickListener; //Escuchador independiente para elemento

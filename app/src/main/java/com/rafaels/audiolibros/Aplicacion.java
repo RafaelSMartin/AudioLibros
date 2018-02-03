@@ -3,6 +3,7 @@ package com.rafaels.audiolibros;
 import android.app.Application;
 
 import com.rafaels.audiolibros.adaptador.AdaptadorLibros;
+import com.rafaels.audiolibros.adaptador.AdaptadorLibrosFiltro;
 import com.rafaels.audiolibros.adaptador.Libro;
 
 import java.util.List;
@@ -14,15 +15,15 @@ import java.util.List;
 public class Aplicacion extends Application {
 
     private List<Libro> listaLibros;
-    private AdaptadorLibros adaptador;
+    private AdaptadorLibrosFiltro adaptador;
 
     @Override
     public void onCreate(){
         listaLibros = Libro.ejemploLibros();
-        adaptador = new AdaptadorLibros(this, listaLibros);
+        adaptador = new AdaptadorLibrosFiltro(this, listaLibros);
     }
 
-    public AdaptadorLibros getAdaptador(){
+    public AdaptadorLibrosFiltro getAdaptador(){
         return adaptador;
     }
 

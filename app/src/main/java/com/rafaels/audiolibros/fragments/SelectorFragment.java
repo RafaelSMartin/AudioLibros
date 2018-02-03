@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.rafaels.audiolibros.adaptador.AdaptadorLibros;
 import com.rafaels.audiolibros.Aplicacion;
+import com.rafaels.audiolibros.adaptador.AdaptadorLibrosFiltro;
 import com.rafaels.audiolibros.adaptador.Libro;
 import com.rafaels.audiolibros.MainActivity;
 import com.rafaels.audiolibros.R;
@@ -33,7 +34,7 @@ public class SelectorFragment extends Fragment {
     private Activity actividad;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private AdaptadorLibros adaptador;
+    private AdaptadorLibrosFiltro adaptador;
     private List<Libro> listaLibros;
 
     @Override
@@ -64,7 +65,8 @@ public class SelectorFragment extends Fragment {
 //                Toast.makeText(actividad, "Seleccionado Elemento: "
 //                        + recyclerView.getChildAdapterPosition(v),
 //                        Toast.LENGTH_SHORT).show();
-                ((MainActivity) actividad).mostrarDetalle(recyclerView.getChildAdapterPosition(v));
+                ((MainActivity) actividad).mostrarDetalle((int) adaptador.getItemId(
+                        recyclerView.getChildAdapterPosition(v)));
             }
         });
 
@@ -90,13 +92,14 @@ public class SelectorFragment extends Fragment {
                                        .setAction("SI", new View.OnClickListener() {
                                            @Override
                                            public void onClick(View v) {
-                                               listaLibros.remove(id);
+                                               adaptador.borrar(id);
                                                adaptador.notifyDataSetChanged();
                                            }
                                        }).show();
                                break;
                            case 2: //Insertar
-                               listaLibros.add(listaLibros.get(id));
+                               int position = recyclerView.getChildLayoutPosition(v);
+                               adaptador.insertar((Libro)adaptador.getItem(position));
                                adaptador.notifyDataSetChanged();
                                Snackbar.make(v, "Libro insertado", Snackbar.LENGTH_INDEFINITE)
                                        .show();
