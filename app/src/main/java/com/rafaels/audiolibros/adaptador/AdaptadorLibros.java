@@ -2,6 +2,7 @@ package com.rafaels.audiolibros.adaptador;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,6 +84,10 @@ public class AdaptadorLibros extends RecyclerView.Adapter<AdaptadorLibros.ViewHo
 //                                           boolean isImmediate) {
 //                        Bitmap bitmap = response.getBitmap();
 //                        holder.portada.setImageBitmap(bitmap);
+//                        Palette palette = Palette.from(bitmap).generate();
+//                        holder.itemView.setBackgroundColor(palette.getLightMutedColor(0));
+//                        holder.titulo.setBackgroundColor(palette.getLightVibrantColor(0));
+//                        holder.portada.invalidate();
 //                    }
 //
 //                    @Override
