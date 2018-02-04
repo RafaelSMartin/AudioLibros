@@ -21,7 +21,7 @@ import android.widget.ImageView;
 public class SplashScreenActivity extends Activity{
 
     // Duracion de  splash screen
-    private static final long SPLASH_SCREEN_DELAY = 3000;
+    private static final long SPLASH_SCREEN_DELAY = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,7 @@ public class SplashScreenActivity extends Activity{
         ImageView iv = (ImageView)findViewById(R.id.image_view_splash);
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.entrada_alfa);
         anim.setInterpolator(new LinearInterpolator());
-        anim.setDuration(3000);
+        anim.setDuration(1000);
         iv.startAnimation(anim);
 
         TimerTask task = new TimerTask() {
@@ -43,7 +43,7 @@ public class SplashScreenActivity extends Activity{
                 Intent mainIntent = new Intent().setClass(
                         SplashScreenActivity.this, MainActivity.class);
                 startActivity(mainIntent);
-                overridePendingTransition(R.anim.entrada_alfa, R.anim.salida_alfa);
+                overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
 
                 // Cierro la actividad para q no se pueda volver atras
                 finish();
