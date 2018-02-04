@@ -91,6 +91,8 @@ public class AdaptadorLibros extends RecyclerView.Adapter<AdaptadorLibros.ViewHo
 //                    }
 //                });
         holder.titulo.setText(libro.titulo);
+        holder.itemView.setScaleX(1);
+        holder.itemView.setScaleY(1);
     }
 
     // Indicamos el número de elementos de la lista

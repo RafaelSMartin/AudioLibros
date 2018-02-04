@@ -1,5 +1,7 @@
 package com.rafaels.audiolibros.fragments;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -8,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -17,10 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
-import com.rafaels.audiolibros.adaptador.AdaptadorLibros;
 import com.rafaels.audiolibros.Aplicacion;
 import com.rafaels.audiolibros.adaptador.AdaptadorLibrosFiltro;
 import com.rafaels.audiolibros.adaptador.Libro;
@@ -34,7 +34,8 @@ import java.util.List;
  */
 
 public class SelectorFragment extends Fragment
-//        implements
+        implements
+        Animator.AnimatorListener
 //        Animation.AnimationListener
 {
 
@@ -65,6 +66,11 @@ public class SelectorFragment extends Fragment
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setAdapter(adaptador);
         recyclerView.setLayoutManager(layoutManager);
+
+        DefaultItemAnimator animator = new DefaultItemAnimator();
+        animator.setAddDuration(2000);
+        animator.setMoveDuration(2000);
+        recyclerView.setItemAnimator(animator);
 
         adaptador.setOnItemClickListener(new View.OnClickListener() {
             @Override
@@ -100,18 +106,25 @@ public class SelectorFragment extends Fragment
                                            @Override
                                            public void onClick(View v) {
 //                                               Animation anim = AnimationUtils.loadAnimation(actividad,
-//                                                    R.anim.menguar);
+//                                                    R.anim.menguar_object);
 //                                               anim.setAnimationListener(SelectorFragment.this);
 //                                               v.startAnimation(anim);
+                                               Animator anim = AnimatorInflater.loadAnimator(actividad,
+                                                       R.animator.menguar_object);
+                                               anim.addListener(SelectorFragment.this);
+                                               anim.setTarget(v);
+                                               anim.start();
                                                adaptador.borrar(id);
-                                               adaptador.notifyDataSetChanged();
+//                                               adaptador.notifyItemRemoved(id);
+//                                               adaptador.notifyDataSetChanged();
                                            }
                                        }).show();
                                break;
                            case 2: //Insertar
                                int position = recyclerView.getChildLayoutPosition(v);
                                adaptador.insertar((Libro)adaptador.getItem(position));
-                               adaptador.notifyDataSetChanged();
+//                               adaptador.notifyDataSetChanged();
+                               adaptador.notifyItemInserted(0);
                                Snackbar.make(v, "Libro insertado", Snackbar.LENGTH_INDEFINITE)
                                        .show();
                                break;
@@ -178,6 +191,16 @@ public class SelectorFragment extends Fragment
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onAnimationStart(Animator animation) {}
+    @Override
+    public void onAnimationEnd(Animator animation) {
+        adaptador.notifyDataSetChanged();
+    }
+    @Override
+    public void onAnimationCancel(Animator animation) {}
+    @Override
+    public void onAnimationRepeat(Animator animation) {}
 
 //    @Override
 //    public void onAnimationStart(Animation animation) {}
