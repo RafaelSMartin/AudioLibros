@@ -75,26 +75,29 @@ public class AdaptadorLibros extends RecyclerView.Adapter<AdaptadorLibros.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int posicion){
         Libro libro = listaLibros.get(posicion);
-        holder.portada.setImageResource(libro.recursoImagen);
-//        Aplicacion aplicacion = (Aplicacion)context.getApplicationContext();
-//        aplicacion.getLectorImagenes().get(libro.urlImagen,
-//                new ImageLoader.ImageListener() {
-//                    @Override
-//                    public void onResponse(ImageLoader.ImageContainer response,
-//                                           boolean isImmediate) {
-//                        Bitmap bitmap = response.getBitmap();
-//                        holder.portada.setImageBitmap(bitmap);
-//                        Palette palette = Palette.from(bitmap).generate();
-//                        holder.itemView.setBackgroundColor(palette.getLightMutedColor(0));
-//                        holder.titulo.setBackgroundColor(palette.getLightVibrantColor(0));
-//                        holder.portada.invalidate();
-//                    }
-//
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        holder.portada.setImageResource(R.drawable.books);
-//                    }
-//                });
+//        holder.portada.setImageResource(libro.recursoImagen);
+        Aplicacion aplicacion = (Aplicacion)context.getApplicationContext();
+        aplicacion.getLectorImagenes().get(libro.urlImagen,
+                new ImageLoader.ImageListener() {
+                    @Override
+                    public void onResponse(ImageLoader.ImageContainer response,
+                                           boolean isImmediate) {
+                        Bitmap bitmap = response.getBitmap();
+                        if(bitmap!=null){
+                            holder.portada.setImageBitmap(bitmap);
+                            Palette palette = Palette.from(bitmap).generate();
+                            holder.itemView.setBackgroundColor(palette.getLightMutedColor(0));
+                            holder.titulo.setBackgroundColor(palette.getLightVibrantColor(0));
+                            holder.portada.invalidate();
+                        }
+
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        holder.portada.setImageResource(R.drawable.books);
+                    }
+                });
         holder.titulo.setText(libro.titulo);
         holder.itemView.setScaleX(1);
         holder.itemView.setScaleY(1);

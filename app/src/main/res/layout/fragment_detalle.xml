@@ -34,8 +34,7 @@
             android:textAlignment="center"
             android:textColor="@android:color/darker_gray"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-        <!--<com.android.volley.toolbox.NetworkImageView-->
-        <ImageView
+        <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/portada"
             android:layout_width="220dp"
             android:layout_height="220dp"

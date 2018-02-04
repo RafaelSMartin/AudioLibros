@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -65,6 +66,7 @@ public class SelectorFragment extends Fragment
         recyclerView = (RecyclerView) vista.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setAdapter(adaptador);
+        layoutManager = new GridLayoutManager(actividad, 2);
         recyclerView.setLayoutManager(layoutManager);
 
         DefaultItemAnimator animator = new DefaultItemAnimator();
