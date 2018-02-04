@@ -17,6 +17,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.rafaels.audiolibros.adaptador.AdaptadorLibros;
 import com.rafaels.audiolibros.Aplicacion;
@@ -31,7 +33,10 @@ import java.util.List;
  * Created by Rafael S Martin on 26/01/2018.
  */
 
-public class SelectorFragment extends Fragment {
+public class SelectorFragment extends Fragment
+//        implements
+//        Animation.AnimationListener
+{
 
     private Activity actividad;
     private RecyclerView recyclerView;
@@ -94,6 +99,10 @@ public class SelectorFragment extends Fragment {
                                        .setAction("SI", new View.OnClickListener() {
                                            @Override
                                            public void onClick(View v) {
+//                                               Animation anim = AnimationUtils.loadAnimation(actividad,
+//                                                    R.anim.menguar);
+//                                               anim.setAnimationListener(SelectorFragment.this);
+//                                               v.startAnimation(anim);
                                                adaptador.borrar(id);
                                                adaptador.notifyDataSetChanged();
                                            }
@@ -170,5 +179,12 @@ public class SelectorFragment extends Fragment {
     }
 
 
-
+//    @Override
+//    public void onAnimationStart(Animation animation) {}
+//    @Override
+//    public void onAnimationEnd(Animation animation) {
+//        adaptador.notifyDataSetChanged();
+//    }
+//    @Override
+//    public void onAnimationRepeat(Animation animation) {}
 }
