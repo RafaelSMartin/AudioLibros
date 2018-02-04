@@ -55,22 +55,26 @@ public class MainActivity extends AppCompatActivity implements
 //        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
-
         adaptador = ((Aplicacion) getApplicationContext()).getAdaptador();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-                irUltimoVisitado();
-            }
-        });
+        //Fragment
+        int idContenedor = (findViewById(R.id.contenedor_pequeno) != null) ?
+                R.id.contenedor_pequeno : R.id.contenedor_izquierdo;
+        SelectorFragment primerFragment = new SelectorFragment();
+        getFragmentManager()
+                .beginTransaction()
+                .add(idContenedor, primerFragment)
+                .commit();
+
+        //Barra de acciones
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
 
 //        if((findViewById(R.id.contenedor_pequeno) != null) &&
 //                (getFragmentManager().findFragmentById(R.id.contenedor_pequeno) == null)){
@@ -81,13 +85,6 @@ public class MainActivity extends AppCompatActivity implements
 //                    .commit();
 //        }
 
-        int idContenedor = (findViewById(R.id.contenedor_pequeno) != null) ?
-                R.id.contenedor_pequeno : R.id.contenedor_izquierdo;
-        SelectorFragment primerFragment = new SelectorFragment();
-        getFragmentManager()
-                .beginTransaction()
-                .add(idContenedor, primerFragment)
-                .commit();
 
 //        Aplicacion app = (Aplicacion) getApplication();
 //        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -145,10 +142,16 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        //Boton Flotante
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                irUltimoVisitado();
+            }
+        });
 
         // Navigation Drawer
         drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
