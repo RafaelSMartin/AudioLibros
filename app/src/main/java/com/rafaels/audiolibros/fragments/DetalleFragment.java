@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,6 +41,8 @@ public class DetalleFragment extends Fragment implements
 
     // Variable tipo ZoomSeekBar
     ZoomSeekBar zoomSeekBar;
+    private Handler handler;
+
 
 
     @Override
@@ -60,6 +63,9 @@ public class DetalleFragment extends Fragment implements
         // Instacio y pongo a escuchar el zoomSeekBar
         zoomSeekBar = (ZoomSeekBar) vista.findViewById(R.id.zoomSeekBar);
         zoomSeekBar.setOnValListener(this);
+
+        handler = new Handler();
+
 
         return vista;
     }
@@ -117,7 +123,7 @@ public class DetalleFragment extends Fragment implements
         SharedPreferences preferencias = PreferenceManager
                 .getDefaultSharedPreferences(getActivity());
         if(preferencias.getBoolean("pref_autoreproducir", true)){
-            mediaPlayer.start();
+            this.start();
         }
 
         mediaController.setMediaPlayer(this);
@@ -200,6 +206,7 @@ public class DetalleFragment extends Fragment implements
 
     @Override public void start() {
         mediaPlayer.start();
+        updateProgress();
     }
 
     @Override public int getAudioSessionId() {
@@ -210,5 +217,26 @@ public class DetalleFragment extends Fragment implements
     @Override
     public void onChangeVal(int newVal) {
         this.seekTo((newVal * 1000));
+    }
+
+    public void updateProgress(){
+        if(handler != null){
+            handler.postDelayed(updateProgress,1000);
+        }
+    }
+
+    private Runnable updateProgress = new Runnable(){
+        public void run(){
+            int pos = mediaPlayer.getCurrentPosition();
+            Log.d("POS", pos+" - "+zoomSeekBar.getValMin()+"-"+zoomSeekBar.getValMax());
+            zoomSeekBar.setValNoEvent((pos/1000));
+            handler.postDelayed(this,1000);
+        }
+    };
+
+    @Override
+    public void onPause() {
+        handler.removeCallbacks(updateProgress);
+        super.onPause();
     }
 }
