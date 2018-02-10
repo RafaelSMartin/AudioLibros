@@ -73,7 +73,7 @@ public class AdaptadorLibros extends RecyclerView.Adapter<AdaptadorLibros.ViewHo
 
     // Usando como base el ViewHolder y lo personalizamos
     @Override
-    public void onBindViewHolder(ViewHolder holder, int posicion){
+    public void onBindViewHolder(final ViewHolder holder, int posicion){
         Libro libro = listaLibros.get(posicion);
 //        holder.portada.setImageResource(libro.recursoImagen);
         Aplicacion aplicacion = (Aplicacion)context.getApplicationContext();

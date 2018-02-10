@@ -41,5 +41,11 @@
             android:layout_below="@id/autor"
             android:layout_centerHorizontal="true"
             android:scaleType="fitCenter" />
+        <com.rafaels.audiolibros.zoomSeekBar.ZoomSeekBar
+            android:id="@+id/zoomSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="128dp"
+            android:padding="16dp"
+            android:layout_below="@id/portada"/>
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

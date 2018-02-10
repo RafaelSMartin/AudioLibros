@@ -20,6 +20,8 @@ import com.rafaels.audiolibros.Aplicacion;
 import com.rafaels.audiolibros.MainActivity;
 import com.rafaels.audiolibros.adaptador.Libro;
 import com.rafaels.audiolibros.R;
+import com.rafaels.audiolibros.zoomSeekBar.OnValListener;
+import com.rafaels.audiolibros.zoomSeekBar.ZoomSeekBar;
 
 import java.io.IOException;
 
@@ -29,12 +31,16 @@ import java.io.IOException;
 
 public class DetalleFragment extends Fragment implements
         View.OnTouchListener, MediaPlayer.OnPreparedListener,
-        MediaController.MediaPlayerControl
+        MediaController.MediaPlayerControl, OnValListener
 {
 
     public static String ARG_ID_LIBRO = "id_libro";
     MediaPlayer mediaPlayer;
     MediaController mediaController;
+
+    // Variable tipo ZoomSeekBar
+    ZoomSeekBar zoomSeekBar;
+
 
     @Override
     public View onCreateView(LayoutInflater inflador, ViewGroup contenedor,
@@ -50,6 +56,11 @@ public class DetalleFragment extends Fragment implements
         } else {
             ponInfoLibro(0, vista);
         }
+
+        // Instacio y pongo a escuchar el zoomSeekBar
+        zoomSeekBar = (ZoomSeekBar) vista.findViewById(R.id.zoomSeekBar);
+        zoomSeekBar.setOnValListener(this);
+
         return vista;
     }
 
@@ -115,6 +126,16 @@ public class DetalleFragment extends Fragment implements
         mediaController.setEnabled(true);
         // solo aparece 3 seg
         mediaController.show();
+
+        int duration = mediaPlayer.getDuration() / 1000;
+        zoomSeekBar.setValMin(0);
+        zoomSeekBar.setValMax(duration);
+        zoomSeekBar.setEscalaMin(0);
+        zoomSeekBar.setEscalaMax(duration);
+        zoomSeekBar.setEscalaIni(0);
+        zoomSeekBar.setEscalaRaya(duration/20);
+        zoomSeekBar.setEscalaRayaLarga(5);
+
     }
 
     @Override
@@ -186,8 +207,8 @@ public class DetalleFragment extends Fragment implements
     }
 
 
-
-
-
-
+    @Override
+    public void onChangeVal(int newVal) {
+        this.seekTo((newVal * 1000));
+    }
 }
