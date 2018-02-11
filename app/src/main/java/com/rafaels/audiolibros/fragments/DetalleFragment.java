@@ -309,7 +309,7 @@ public class DetalleFragment extends Fragment implements
         remoteViews.setTextColor(R.id.autor_notificacion, Color.WHITE);
 
 
-        Intent intent = new Intent();
+        Intent intent = new Intent(getActivity(), MainActivity.class);
         intent.setAction(ACCION_DEMO);
         intent.putExtra(EXTRA_PARAM, "otro parámetro");
         PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0,
