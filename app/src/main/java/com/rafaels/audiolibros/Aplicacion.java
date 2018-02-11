@@ -1,7 +1,12 @@
 package com.rafaels.audiolibros;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.util.Log;
 import android.util.LruCache;
 
 import com.android.volley.RequestQueue;
@@ -11,6 +16,7 @@ import com.rafaels.audiolibros.adaptador.AdaptadorLibros;
 import com.rafaels.audiolibros.adaptador.AdaptadorLibrosFiltro;
 import com.rafaels.audiolibros.adaptador.Libro;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -25,6 +31,10 @@ public class Aplicacion extends Application {
     private static RequestQueue colaPeticiones;
     private static ImageLoader lectorImagenes;
 
+    private MediaPlayer mediaPlayer;
+
+
+    @SuppressLint("MissingSuperCall")
     @Override
     public void onCreate(){
         listaLibros = Libro.ejemploLibros();
@@ -59,7 +69,60 @@ public class Aplicacion extends Application {
         return colaPeticiones;
     }
 
+    public static void setColaPeticiones(RequestQueue colaPeticiones) {
+        Aplicacion.colaPeticiones = colaPeticiones;
+    }
+
     public static ImageLoader getLectorImagenes() {
         return lectorImagenes;
     }
+
+    public static void setLectorImagenes(ImageLoader lectorImagenes) {
+        Aplicacion.lectorImagenes = lectorImagenes;
+    }
+
+    public void playPause(){
+        if(mediaPlayer==null || !mediaPlayer.isPlaying()){
+            play();
+        }
+        else{
+            stop();
+        }
+    }
+
+    public void play(){
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                mediaPlayer.start();
+            }
+        });
+        Libro libro = adaptador.getItem(obtenerUltimoLibro());
+        Uri audio = Uri.parse(libro.urlAudio);
+        try {
+            mediaPlayer.setDataSource(getApplicationContext(), audio);
+            mediaPlayer.prepareAsync();
+        } catch (IOException e) {
+            Log.e("Audiolibros", "ERROR: No se puede reproducir "+audio,e);
+        }
+    }
+
+    public void stop(){
+        if(mediaPlayer!=null && mediaPlayer.isPlaying()){
+            mediaPlayer.stop();
+        }
+    }
+
+    public boolean isPlaying(){
+        if(mediaPlayer==null) return false;
+        return mediaPlayer.isPlaying();
+    }
+
+    public int obtenerUltimoLibro(){
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("com.example.audiolibros_internal", MODE_PRIVATE);
+        return pref.getInt("ultimo",-1);
+    }
+
+
 }

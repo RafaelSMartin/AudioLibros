@@ -1,22 +1,34 @@
 package com.rafaels.audiolibros.fragments;
 
 import android.app.Fragment;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.android.volley.toolbox.Volley;
 import com.rafaels.audiolibros.Aplicacion;
 import com.rafaels.audiolibros.MainActivity;
 import com.rafaels.audiolibros.adaptador.Libro;
@@ -42,6 +54,12 @@ public class DetalleFragment extends Fragment implements
     // Variable tipo ZoomSeekBar
     ZoomSeekBar zoomSeekBar;
     private Handler handler;
+
+    //Notificaciones
+    private static final int ID_NOTIFICACION=1;
+    private NotificationManager notificManager;
+    private NotificationCompat.Builder notificacion;
+    private RemoteViews remoteViews;
 
 
 
@@ -82,15 +100,38 @@ public class DetalleFragment extends Fragment implements
     // Introducimos la info en la vista
     private void ponInfoLibro(int id, View vista){
         // Referencia del libro a representar
-        Libro libro = ((Aplicacion) getActivity().getApplication()).getListaLibros().get(id);
+        final Libro libro = ((Aplicacion) getActivity().getApplication()).getListaLibros().get(id);
 
         // Actualizamos la info
         ((TextView) vista.findViewById(R.id.titulo)).setText(libro.titulo);
         ((TextView) vista.findViewById(R.id.autor)).setText(libro.autor);
 //        ((ImageView) vista.findViewById(R.id.portada)).setImageResource(libro.recursoImagen);
-        Aplicacion aplicacion = (Aplicacion)getActivity().getApplication();
-        ((NetworkImageView) vista.findViewById(R.id.portada)).setImageUrl(
-                libro.urlImagen,aplicacion.getLectorImagenes());
+        final Aplicacion aplicacion = (Aplicacion)getActivity().getApplication();
+//        ((NetworkImageView) vista.findViewById(R.id.portada)).setImageUrl(
+//                libro.urlImagen,aplicacion.getLectorImagenes());
+
+
+        RequestQueue colaPeticiones = Volley.newRequestQueue(aplicacion);
+        ((NetworkImageView) vista.findViewById(R.id.portada)).setImageUrl( libro.urlImagen,
+                new ImageLoader(
+                colaPeticiones,
+                new ImageLoader.ImageCache() {
+                    private final LruCache<String, Bitmap> cache = new LruCache<>(10);
+
+                    @Override
+                    public Bitmap getBitmap(String url) {
+                        return cache.get(url);
+                    }
+
+                    @Override
+                    public void putBitmap(String url, Bitmap bitmap) {
+                        crearNotificacion(libro,bitmap,aplicacion);
+                        cache.put(url,bitmap);
+                    }
+                }));
+
+
+
 
         //Ponemos a escuchar la vista
         vista.setOnTouchListener(this);
@@ -109,6 +150,9 @@ public class DetalleFragment extends Fragment implements
         } catch(IOException e){
             Log.e("AudioLibros", "ERROR: No se puede reproducir" + audio,e);
         }
+
+
+
     }
 
     public void ponInfoLibro(int id){
@@ -239,4 +283,35 @@ public class DetalleFragment extends Fragment implements
         handler.removeCallbacks(updateProgress);
         super.onPause();
     }
+
+    private void crearNotificacion(Libro libro, Bitmap bitmap, Aplicacion aplicacion){
+        remoteViews = new RemoteViews(aplicacion.getPackageName(),
+                R.layout.custom_notification);
+        // remoteViews.setImageViewResource(R.id.imagen_notificacion, R.drawable.ic_book_white_24dp);
+        remoteViews.setImageViewBitmap(R.id.imagen_notificacion, bitmap);
+        remoteViews.setImageViewResource(R.id.accion_notificacion,
+                R.drawable.ic_play);
+        remoteViews.setTextViewText(R.id.titulo_notificacion, libro.titulo);
+        remoteViews.setTextViewText(R.id.autor_notificacion, libro.autor);
+
+        Intent intent = new Intent(aplicacion, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(aplicacion, 0,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        notificacion = new NotificationCompat.Builder(aplicacion)
+                .setContent(remoteViews)
+                .setPriority(Notification.PRIORITY_MAX)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("Custom Notification")
+                .setContentIntent(pendingIntent);
+        notificManager = (NotificationManager)aplicacion.getSystemService(
+                Context.NOTIFICATION_SERVICE);
+        notificManager.notify(ID_NOTIFICACION, notificacion.build());
+
+
+
+    }
+
+
+
 }
