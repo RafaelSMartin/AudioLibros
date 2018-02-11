@@ -2,14 +2,19 @@ package com.rafaels.audiolibros.fragments;
 
 import android.app.Fragment;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -24,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.RemoteViews;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
@@ -56,10 +62,16 @@ public class DetalleFragment extends Fragment implements
     private Handler handler;
 
     //Notificaciones
-    private static final int ID_NOTIFICACION=1;
+    private static final int ID_NOTIFICACION = 1;
+    static final String ID_CANAL = "channel_id";
     private NotificationManager notificManager;
     private NotificationCompat.Builder notificacion;
     private RemoteViews remoteViews;
+
+    public static final String ACCION_DEMO =
+            "com.rafaels.audiolibros.ACCION_DEMO";
+    public static final String EXTRA_PARAM =
+            "com.rafaels.audiolibros.EXTRA_PARAM";
 
 
 
@@ -290,26 +302,64 @@ public class DetalleFragment extends Fragment implements
         // remoteViews.setImageViewResource(R.id.imagen_notificacion, R.drawable.ic_book_white_24dp);
         remoteViews.setImageViewBitmap(R.id.imagen_notificacion, bitmap);
         remoteViews.setImageViewResource(R.id.accion_notificacion,
-                R.drawable.ic_play);
+                android.R.drawable.ic_media_play);
         remoteViews.setTextViewText(R.id.titulo_notificacion, libro.titulo);
+        remoteViews.setTextColor(R.id.titulo_notificacion, Color.WHITE);
         remoteViews.setTextViewText(R.id.autor_notificacion, libro.autor);
+        remoteViews.setTextColor(R.id.autor_notificacion, Color.WHITE);
 
-        Intent intent = new Intent(aplicacion, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(aplicacion, 0,
+
+        Intent intent = new Intent();
+        intent.setAction(ACCION_DEMO);
+        intent.putExtra(EXTRA_PARAM, "otro parámetro");
+        PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        remoteViews.setOnClickPendingIntent(R.id.accion_notificacion, pendingIntent);
 
-        notificacion = new NotificationCompat.Builder(aplicacion)
+
+        notificacion = new NotificationCompat.Builder(aplicacion, ID_CANAL)
                 .setContent(remoteViews)
                 .setPriority(Notification.PRIORITY_MAX)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Custom Notification")
-                .setContentIntent(pendingIntent);
+                .setContentTitle("Custom Notification");
         notificManager = (NotificationManager)aplicacion.getSystemService(
                 Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= 26){
+            NotificationChannel channel = new NotificationChannel(ID_CANAL,"Nombre del canal",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription("Descripción del canal");
+            notificManager.createNotificationChannel(channel);
+        }
+
         notificManager.notify(ID_NOTIFICACION, notificacion.build());
 
+        IntentFilter filtro = new IntentFilter(ACCION_DEMO);
+        getActivity().registerReceiver(new ReceptorAnuncio(), filtro);
 
 
+
+    }
+
+    public class ReceptorAnuncio extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            String param = intent.getStringExtra(EXTRA_PARAM);
+            Toast.makeText(getActivity(), "Parámetro:" + param, Toast.LENGTH_LONG).show();
+
+            if(mediaPlayer.isPlaying()){
+                mediaPlayer.stop();
+                remoteViews.setImageViewResource(R.id.accion_notificacion,
+                        R.drawable.ic_stat_name);
+            } else{
+                mediaPlayer.start();
+                remoteViews.setImageViewResource(R.id.accion_notificacion,
+                        android.R.drawable.ic_media_play);
+            }
+
+            notificManager.notify(ID_NOTIFICACION, notificacion.build());
+        }
     }
 
 
